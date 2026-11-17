@@ -48,7 +48,7 @@ def roc_curve_fig(artifacts):
 
 def _auc(a):
     # trapezoid integration
-    return np.trapz(a['tpr'], a['fpr'])
+    return np.trapezoid(a['tpr'], a['fpr'])
 
 
 def pr_curve_fig(artifacts):
