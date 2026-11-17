@@ -15,7 +15,7 @@ mkdir -p data
 # copy cm1.csv into data/
 
 # 3. Run
-streamlit run app.py
+python -m streamlit run app.py
 =======
 # Software-Defect-Prediction
 AI-powered Software Defect Prediction using Machine Learning to identify defective software modules. Features model comparison, SHAP-based explainability, performance evaluation, interactive Streamlit dashboard, and automated PDF report generation.
