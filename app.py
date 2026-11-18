@@ -65,7 +65,7 @@ try:
 except Exception:
     # Render error BEFORE st.set_page_config — allowed here
     st.set_page_config(page_title="Import Error", layout="wide")
-    st.error("🚨 **Import failed — this is why you get a black screen.**")
+    st.error(" **Import failed — this is why you get a black screen.**")
     st.code(traceback.format_exc(), language="python")
     st.info("Fix the error above, then refresh. No changes lost.")
     log("IMPORT FAILED")
@@ -109,7 +109,7 @@ try:
     # ---------- graph helper ----------
     def graph_with_expand(fig, key, caption=""):
         st.plotly_chart(fig, use_container_width=True, key=f"chart_{key}")
-        if st.button(f"🔍 Open '{caption or key}' in Full Page", key=f"btn_{key}"):
+        if st.button(f" Open '{caption or key}' in Full Page", key=f"btn_{key}"):
             st.session_state['fullpage_fig'] = fig
             st.session_state['fullpage_title'] = caption or key
             st.rerun()
@@ -136,7 +136,7 @@ try:
 
     # ---------- sidebar ----------
     with st.sidebar:
-        st.markdown("## ⚙️ Configuration")
+        st.markdown("##  Configuration")
         st.markdown("### 1. Upload Dataset")
 
         use_sample = st.checkbox("Use bundled CM1 dataset (data/cm1.csv)",
@@ -150,7 +150,7 @@ try:
         random_state = st.number_input("Random seed", 0, 9999, 42)
         threshold = st.slider("Decision threshold", 0.05, 0.95, 0.50, 0.01)
 
-        run_btn = st.button("🚀 Run Full Pipeline", use_container_width=True)
+        run_btn = st.button(" Run Full Pipeline", use_container_width=True)
 
     # ---------- pipeline: load ----------
     if run_btn:
@@ -158,7 +158,7 @@ try:
             try:
                 if use_sample:
                     if not os.path.exists("data/cm1.csv"):
-                        st.error("❌ data/cm1.csv not found. Upload a CSV or add the file.")
+                        st.error(" data/cm1.csv not found. Upload a CSV or add the file.")
                         st.stop()
                     df_raw = load_dataset("data/cm1.csv")
                 elif uploaded is not None:
@@ -183,7 +183,7 @@ try:
         df_raw = st.session_state['df']
         auto_target = st.session_state.get('auto_target')
 
-        st.markdown('<div class="section-title">🎯 Target Column Selection</div>',
+        st.markdown('<div class="section-title"> Target Column Selection</div>',
                     unsafe_allow_html=True)
 
         cols = df_raw.columns.tolist()
@@ -208,7 +208,7 @@ try:
 
         st.session_state['df_encoded'] = df_enc
 
-        if st.button("▶️ Continue to Preprocessing & Training", type="primary"):
+        if st.button(" Continue to Preprocessing & Training", type="primary"):
             st.session_state['pipeline_stage'] = 'training'
             st.rerun()
 
@@ -263,7 +263,7 @@ try:
             )
 
         st.session_state['pipeline_stage'] = 'ready'
-        st.success("✅ Pipeline complete — all 6 modules unlocked.")
+        st.success(" Pipeline complete — all 6 modules unlocked.")
         st.rerun()
 
     # ---------- metric card ----------
@@ -278,7 +278,7 @@ try:
 
     # ---------- landing / dashboard ----------
     if st.session_state.get('pipeline_stage') != 'ready':
-        st.info("👈 Configure the sidebar and click **Run Full Pipeline** to begin.")
+        st.info(" Configure the sidebar and click **Run Full Pipeline** to begin.")
         st.markdown("""
         ### About this dashboard
         This app has 6 research modules:
@@ -322,12 +322,12 @@ try:
 
     # ---------- 6 tabs ----------
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
-        "📊 1. Dataset Analysis",
-        "🤖 2. Model Comparison",
-        "📈 3. Model Evaluation",
-        "🔍 4. Explainable AI (SHAP)",
-        "🎯 5. Predict a Module",
-        "📄 6. Research Report",
+        " 1. Dataset Analysis",
+        " 2. Model Comparison",
+        " 3. Model Evaluation",
+        " 4. Explainable AI (SHAP)",
+        " 5. Predict a Module",
+        " 6. Research Report",
     ])
 
     # ============ TAB 1: EDA ============
@@ -353,10 +353,10 @@ try:
         fig_class = eda.class_distribution_chart(df, target_col)
         graph_with_expand(fig_class, "class_dist", "Class Distribution")
 
-        with st.expander("🔎 Missing Values Detail"):
+        with st.expander(" Missing Values Detail"):
             st.dataframe(eda.missing_values_df(df), use_container_width=True)
 
-        with st.expander("📋 Descriptive Statistics"):
+        with st.expander(" Descriptive Statistics"):
             st.dataframe(eda.descriptive_stats(df, X.columns.tolist()), use_container_width=True)
 
         st.markdown('<div class="section-title">Correlation Analysis</div>', unsafe_allow_html=True)
@@ -379,7 +379,7 @@ try:
         )
         best_row = comparison_df[comparison_df['Model'] == best_name].iloc[0]
         st.success(
-            f"🏆 **Best model by F1:** {best_name}  "
+            f" **Best model by F1:** {best_name}  "
             f"(Precision={best_row['Precision']}, Recall={best_row['Recall']}, "
             f"F1={best_row['F1']}, ROC-AUC={best_row['ROC-AUC']})"
         )
@@ -404,7 +404,7 @@ try:
         """)
 
         st.download_button(
-            "💾 Download Model Comparison CSV",
+            " Download Model Comparison CSV",
             data=comparison_df.to_csv(index=False).encode('utf-8'),
             file_name='model_comparison.csv',
             mime='text/csv',
@@ -447,7 +447,7 @@ try:
         fig_thr = evaluation.threshold_curve_fig(threshold_rows, model_choice)
         graph_with_expand(fig_thr, "thr", "Threshold Sensitivity")
 
-        with st.expander("📋 Threshold Table"):
+        with st.expander(" Threshold Table"):
             st.dataframe(pd.DataFrame(threshold_rows), use_container_width=True)
 
         st.markdown("""
@@ -465,7 +465,7 @@ try:
         st.markdown("#### 4.1 Feature Importance (Global)")
         fig_imp = explainability.feature_importance_bar(shap_values, feature_names, top_n=15)
         graph_with_expand(fig_imp, "shap_bar", "SHAP Feature Importance Bar")
-        with st.expander("📋 Importance Table"):
+        with st.expander(" Importance Table"):
             st.dataframe(shap_importance_df.head(20), use_container_width=True)
 
         st.markdown("#### 4.2 SHAP Beeswarm (Global Impact)")
@@ -509,7 +509,7 @@ try:
                     input_vals[feat] = st.number_input(
                         feat, value=float(X[feat].median()), format="%.4f"
                     )
-            submitted = st.form_submit_button("🔮 Predict", use_container_width=True)
+            submitted = st.form_submit_button(" Predict", use_container_width=True)
 
         if submitted:
             input_df = pd.DataFrame([input_vals])
@@ -520,17 +520,17 @@ try:
 
             if result['prediction'] == 1:
                 st.markdown(
-                    f'<div class="prediction-defective">⚠️ DEFECTIVE — '
+                    f'<div class="prediction-defective"> DEFECTIVE — '
                     f'{result["probability"]*100:.2f}% probability</div>',
                     unsafe_allow_html=True)
             else:
                 st.markdown(
-                    f'<div class="prediction-clean">✅ NON-DEFECTIVE — '
+                    f'<div class="prediction-clean"> NON-DEFECTIVE — '
                     f'{result["probability"]*100:.2f}% probability</div>',
                     unsafe_allow_html=True)
 
             st.markdown(f"**Model:** {best_name}  |  **Threshold:** {threshold:.2f}")
-            st.markdown("### 🧠 Why this prediction?")
+            st.markdown("###  Why this prediction?")
             contribs = result['top_contributions']
             fig_contrib = go.Figure(go.Bar(
                 x=contribs['SHAP'], y=contribs['Feature'], orientation='h',
@@ -577,7 +577,7 @@ try:
         for q, ans in research_findings.items():
             st.markdown(f"**{q}**  \n{ans}\n")
 
-        if st.button("📥 Generate & Download PDF Report", type="primary"):
+        if st.button(" Generate & Download PDF Report", type="primary"):
             with st.spinner("Generating PDF…"):
                 os.makedirs("outputs/reports", exist_ok=True)
                 pdf_path = "outputs/reports/research_report.pdf"
@@ -592,7 +592,7 @@ try:
                     )
                     with open(pdf_path, "rb") as f:
                         st.download_button(
-                            "⬇️ Download research_report.pdf",
+                            " Download research_report.pdf",
                             data=f.read(), file_name="research_report.pdf",
                             mime="application/pdf",
                         )
@@ -603,13 +603,13 @@ try:
 
         st.markdown("---")
         st.markdown("### Export Raw Results")
-        st.download_button("💾 Model Comparison CSV",
+        st.download_button(" Model Comparison CSV",
                            data=comparison_df.to_csv(index=False).encode(),
                            file_name="model_comparison.csv", mime="text/csv")
-        st.download_button("💾 SHAP Importance CSV",
+        st.download_button(" SHAP Importance CSV",
                            data=shap_importance_df.to_csv(index=False).encode(),
                            file_name="shap_importance.csv", mime="text/csv")
-        st.download_button("💾 Threshold Sensitivity CSV",
+        st.download_button(" Threshold Sensitivity CSV",
                            data=pd.DataFrame(threshold_rows).to_csv(index=False).encode(),
                            file_name="threshold_sensitivity.csv", mime="text/csv")
 
@@ -621,6 +621,6 @@ try:
         "</div>", unsafe_allow_html=True)
 
 except Exception:
-    st.error("🚨 **Runtime error inside dashboard**")
+    st.error(" **Runtime error inside dashboard**")
     st.code(traceback.format_exc(), language="python")
     log("RUNTIME ERROR in dashboard")
